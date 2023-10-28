@@ -29,12 +29,18 @@ produces a new dataframe that has summary statistics for a given
 variable with the dataset, grouped by another variable. While I only
 used this once previously, I still think it could be useful for future
 analyses. The calculated statistics I will include in this function are
-range, mean, median, and standard deviation. In the second exercises, I
-will be documenting the function using `roxygen2` tags.
+range, mean, median, and standard deviation.
+
+In the function, double curly brackets are used to pass variables into
+the `dplyr` functions and evaluated in the context of the dataframe
+being used as input, allowing flexibility.
+
+In the second exercise, I will be documenting the function using
+`roxygen2` tags.
 
 References: [curly
-curly](https://dcl-prog.stanford.edu/tidy-eval-basics.htmlhttps://dcl-prog.stanford.edu/tidy-eval-basics.html),
-[if else](https://www.datamentor.io/r-programming/if-else-statement),
+curly](https://dcl-prog.stanford.edu/tidy-eval-basics.html), [if
+else](https://www.datamentor.io/r-programming/if-else-statement),
 [documenting](https://cran.r-project.org/web/packages/roxygen2/vignettes/rd.html)
 
 ``` r
@@ -246,7 +252,7 @@ test_that("calc_summary_stats with vector containing no NA's", {
 })
 ```
 
-    ## Test passed 🎉
+    ## Test passed 🥇
 
 Next, I will test the function with a vector with NA’s. Again, I will
 create a small one for this example and run a similar test as the
@@ -272,7 +278,7 @@ test_that("calc_summary_stats with vector with NA's", {
 })
 ```
 
-    ## Test passed 😸
+    ## Test passed 🌈
 
 Finally, I will also check that the function will not work if the values
 are not numeric by using `expect_error`.
@@ -289,6 +295,6 @@ test_that("calc_summary_stats with non-numeric data_variable", {
 })
 ```
 
-    ## Test passed 😸
+    ## Test passed 🎊
 
 All together, the tests show that the function works as expected.

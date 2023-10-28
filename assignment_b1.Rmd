@@ -24,9 +24,13 @@ library(testthat)
 
 ## Exercise 1 & 2
 
-In the first exercise, I will be creating the function. I would like to create a function that, when used with a dataframe with samples, produces a new dataframe that has summary statistics for a given variable with the dataset, grouped by another variable. While I only used this once previously, I still think it could be useful for future analyses. The calculated statistics I will include in this function are range, mean, median, and standard deviation. In the second exercises, I will be documenting the function using `roxygen2` tags.
+In the first exercise, I will be creating the function. I would like to create a function that, when used with a dataframe with samples, produces a new dataframe that has summary statistics for a given variable with the dataset, grouped by another variable. While I only used this once previously, I still think it could be useful for future analyses. The calculated statistics I will include in this function are range, mean, median, and standard deviation.
 
-References: [curly curly](https://dcl-prog.stanford.edu/tidy-eval-basics.htmlhttps://dcl-prog.stanford.edu/tidy-eval-basics.html), [if else](https://www.datamentor.io/r-programming/if-else-statement), [documenting](https://cran.r-project.org/web/packages/roxygen2/vignettes/rd.html)
+In the function, double curly brackets are used to pass variables into the `dplyr` functions and evaluated in the context of the dataframe being used as input, allowing flexibility.
+
+In the second exercise, I will be documenting the function using `roxygen2` tags.
+
+References: [curly curly](https://dcl-prog.stanford.edu/tidy-eval-basics.html), [if else](https://www.datamentor.io/r-programming/if-else-statement), [documenting](https://cran.r-project.org/web/packages/roxygen2/vignettes/rd.html)
 
 ```{r, E1&2 - creating and documenting the function}
 
