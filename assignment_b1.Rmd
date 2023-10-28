@@ -1,0 +1,194 @@
+---
+title: "Assignment B-1: Making a function"
+author: "Eully Ao"
+output: github_document
+---
+
+## Introduction
+
+In this assignment, I will be creating, documenting, and testing a function. There are 4 exercises:
+
+1.  Making a function
+2.  Documenting the function
+3.  Examples of using the function
+4.  Testing the function
+
+To begin, load packages required for this assignment.
+
+```{r, message = FALSE}
+library(tidyverse)
+library(roxygen2)
+library(datateachr)
+library(testthat)
+```
+
+## Exercise 1 & 2
+
+In the first exercise, I will be creating the function. I would like to create a function that, when used with a dataframe with samples, produces a new dataframe that has summary statistics for a given variable with the dataset, grouped by another variable. While I only used this once previously, I still think it could be useful for future analyses. The calculated statistics I will include in this function are range, mean, median, and standard deviation. In the second exercises, I will be documenting the function using `roxygen2` tags.
+
+References: [curly curly](https://dcl-prog.stanford.edu/tidy-eval-basics.htmlhttps://dcl-prog.stanford.edu/tidy-eval-basics.html), [if else](https://www.datamentor.io/r-programming/if-else-statement), [documenting](https://cran.r-project.org/web/packages/roxygen2/vignettes/rd.html)
+
+```{r, E1&2 - creating and documenting the function}
+
+#' Calculate Summary Statistics
+#'
+#' 'calc_summary_stats' calculates summary statistics for a given variable within a dataset, 
+#' grouped by another variable.
+#'
+#' @param data A data frame containing the dataset.
+#' @param grouping_variable A character string specifying the variable by which the data 
+#' should be grouped, therefore named grouping_variable.
+#' @param data_variable A character string specifying the variable for which summary 
+#' statistics will be calculated. The variable is wthin a dataset, thus named data_variable.
+#'
+#' @return A data frame containing the summary statistics range, mean, median, 
+#' and standard deviation.
+
+calc_summary_stats <- function(data, grouping_variable, data_variable) { 
+  if (data %>%  pull({{data_variable}}) %>% is.numeric()) {
+    summary_stats <- data %>%
+    group_by({{grouping_variable}}) %>%
+    summarise( 
+      range = max({{data_variable}}) - min({{data_variable}}),
+      mean = mean({{data_variable}}, na.rm = TRUE),
+      median = median({{data_variable}}, na.rm = TRUE),
+      std_dev = sd({{data_variable}}, na.rm = TRUE))
+    return(summary_stats)
+  } else {
+    stop ("The specificed 'data_variable' must contain numeric values.")
+  }
+}
+
+```
+
+## Exercise 3
+
+In this example, I will demonstrate the usage of `calc_summary_stats` with a few examples.
+
+First, using the `vancouver_trees` dataset from the package `datateachr`, I will group the trees by their species, indicated by `species_name`, and calculate the summary statistics for the variable `diameter` using the function. Then, I will produce a dataframe named `trees_summary` with the results.
+
+```{r, E3 - vancouver_trees example}
+
+# load dataset as dataframe
+vancouver_trees <- vancouver_trees
+head(vancouver_trees)
+
+# try function
+trees_diameter_summary <- calc_summary_stats(data = vancouver_trees, grouping_variable = species_name, data_variable = diameter)
+
+# view results
+head(trees_diameter_summary)
+```
+
+Next, using the `iris` dataset built into R, I will group the samples by species, indicated by `Species`, and calculate the summary statistics for the variable `Sepal.Length` using the function. Then, I will produce a dataframe named `sepal_length_summary` with the results.
+
+```{r, E3 - iris example}
+
+# load dataset as dataframe
+iris <- iris
+head(iris)
+
+# try function
+sepal_length_summary <- calc_summary_stats(data = iris, grouping_variable = Species, data_variable = Sepal.Length)
+
+# view results
+head(sepal_length_summary)
+
+```
+
+Next, using the `PlantGrowth` dataset built into R, I will group the samples by their treatment group, indicated by `group`, and calculate the summary statistics for the variable `weight` using the function. Then, I will produce a dataframe named `plant_weight_summary` with the results.
+
+```{r, E3 - plantsgrowth example}
+
+# load dataset as dataframe
+PlantGrowth <- PlantGrowth
+head(PlantGrowth)
+
+# try function
+plant_weight_summary <- calc_summary_stats(data = PlantGrowth, grouping_variable = group, data_variable = weight)
+
+# view results
+head(plant_weight_summary)
+
+```
+
+Now, to demonstrate an error, I will use the `vancouver_trees` dataset to try to calculate summary statistics for non-numeric values, such as those found in the column `neighbourhood_name`.
+
+```{r, E3 - vancouver_trees error example, error = TRUE}
+
+# is neighbourhood_name a numeric variable? 
+is.numeric(vancouver_trees$neighbourhood_name)
+
+# try function, using neighbourhood_name as data_variable
+trees_error <- calc_summary_stats(data = vancouver_trees, grouping_variable = species, data_variable = neighbourhood_name)
+
+```
+
+Because the values found in `neighbourhood_name` are not numeric, the error message "The specified 'data_variable' must contain numeric values" pops up.
+
+## Exercise 4
+
+In this exercises, I will be testing the function using the `expect_()` function from the `testthat` package.
+
+First, I will test the function with a vector with no NA's. I will create a small one for this example. The test checks that the result `result` is a dataframe using `expect_is`. Using `expect_equal`, it will check that the result has 5 columns (one for `data_variable` and one each for range, mean, median, and standard deviation), and the variables are grouped correctly. It will also checks whether the values for each of those statistics are correct, with tolerance for numbers that are not exactly the same to be considered equal due to decimals.
+
+```{r, E4- test for non NAs}
+
+# create test using a dataframe that has no NA's
+test_that("calc_summary_stats with vector containing no NA's", {
+  data <- data.frame(
+    grouping_variable = c("A", "B", "A", "B"),
+    data_variable = c(5, 10, 15, 20)
+  )
+  result <- calc_summary_stats(data, grouping_variable, data_variable)
+  
+  expect_is(result, "data.frame") # check that the resulting object is a dataframe
+  expect_equal(ncol(result), 5) # check that there are 5 columns
+  expect_equal(result$grouping_variable, c("A", "B")) # check that the samples are grouped correctly
+  expect_equal(result$range, c(10, 10)) # check range 
+  expect_equal(result$mean, c(10, 15)) # check mean 
+  expect_equal(result$median, c(10, 15)) # check median
+  expect_equal(result$std_dev, c(7.07, 7.07), tolerance = 1e5)
+  
+})
+```
+
+Next, I will test the function with a vector with NA's. Again, I will create a small one for this example and run a similar test as the previous example.
+
+```{r, E4 - test for NAs}
+
+# create test using a dataframe that has no NA's
+test_that("calc_summary_stats with vector with NA's", {
+  data <- data.frame(
+    grouping_variable = c("A", "B", "A", "B"),
+    data_variable = c(5, 10, NA, 20)
+  )
+  result <- calc_summary_stats(data, grouping_variable, data_variable)
+  
+  expect_is(result, "data.frame") # check that the resulting object is a dataframe
+  expect_equal(ncol(result), 5) # check that there are 5 columns
+  expect_equal(result$grouping_variable, c("A", "B")) # check that the samples are grouped correctly
+  expect_equal(result$range, c(NA, 10)) # check range 
+  expect_equal(result$mean, c(5, 15)) # check mean 
+  expect_equal(result$median, c(5, 15)) # check median
+  expect_equal(result$std_dev, c(NA, 7.07), tolerance = 1e5)
+  
+})
+```
+
+Finally, I will also check that the function will not work if the values are not numeric by using `expect_error`.
+
+```{r, E4 - test for non numeric values}
+
+# create test using a dataframe that has non numeric values
+test_that("calc_summary_stats with non-numeric data_variable", {
+  data <- data.frame(
+    grouping_variable = c("A", "B", "A", "B"),
+    data_variable = c("five", "ten", "fifteen", "twenty")
+  )
+
+  expect_error(calc_summary_stats(data, grouping_variable, data_variable))
+})
+```
+
+All together, the tests show that the function works as expected.
