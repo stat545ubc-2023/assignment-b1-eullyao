@@ -246,7 +246,7 @@ test_that("calc_summary_stats with vector containing no NA's", {
 })
 ```
 
-    ## Test passed 😸
+    ## Test passed 🎉
 
 Next, I will test the function with a vector with NA’s. Again, I will
 create a small one for this example and run a similar test as the
@@ -257,7 +257,7 @@ previous example.
 test_that("calc_summary_stats with vector with NA's", {
   data <- data.frame(
     grouping_variable = c("A", "B", "A", "B"),
-    data_variable = c(5, 10, NA, 20)
+    data_variable = c(5, 10, NA, 20) # added a NA
   )
   result <- calc_summary_stats(data, grouping_variable, data_variable)
   
@@ -267,12 +267,12 @@ test_that("calc_summary_stats with vector with NA's", {
   expect_equal(result$range, c(NA, 10)) # check range 
   expect_equal(result$mean, c(5, 15)) # check mean 
   expect_equal(result$median, c(5, 15)) # check median
-  expect_equal(result$std_dev, c(NA, 7.07), tolerance = 1e5)
+  expect_equal(result$std_dev, c(NA, 7.07), tolerance = 1e5) # check standard deviation
   
 })
 ```
 
-    ## Test passed 🎉
+    ## Test passed 😸
 
 Finally, I will also check that the function will not work if the values
 are not numeric by using `expect_error`.
@@ -282,13 +282,13 @@ are not numeric by using `expect_error`.
 test_that("calc_summary_stats with non-numeric data_variable", {
   data <- data.frame(
     grouping_variable = c("A", "B", "A", "B"),
-    data_variable = c("five", "ten", "fifteen", "twenty")
+    data_variable = c("five", "ten", "fifteen", "twenty") # non numeric values
   )
 
   expect_error(calc_summary_stats(data, grouping_variable, data_variable))
 })
 ```
 
-    ## Test passed 🥇
+    ## Test passed 😸
 
 All together, the tests show that the function works as expected.
