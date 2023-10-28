@@ -223,6 +223,9 @@ are grouped correctly. It will also checks whether the values for each
 of those statistics are correct, with tolerance for numbers that are not
 exactly the same to be considered equal due to decimals.
 
+Reference: [expect_is, expect_equal,
+expect_error](https://cran.r-project.org/web/packages/tinytest/vignettes/tinytest_examples.pdf)
+
 ``` r
 # create test using a dataframe that has no NA's
 test_that("calc_summary_stats with vector containing no NA's", {
@@ -243,7 +246,7 @@ test_that("calc_summary_stats with vector containing no NA's", {
 })
 ```
 
-    ## Test passed 🎉
+    ## Test passed 😸
 
 Next, I will test the function with a vector with NA’s. Again, I will
 create a small one for this example and run a similar test as the
@@ -286,6 +289,6 @@ test_that("calc_summary_stats with non-numeric data_variable", {
 })
 ```
 
-    ## Test passed 🌈
+    ## Test passed 🥇
 
 All together, the tests show that the function works as expected.

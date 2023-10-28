@@ -132,6 +132,8 @@ In this exercises, I will be testing the function using the `expect_()` function
 
 First, I will test the function with a vector with no NA's. I will create a small one for this example. The test checks that the result `result` is a dataframe using `expect_is`. Using `expect_equal`, it will check that the result has 5 columns (one for `data_variable` and one each for range, mean, median, and standard deviation), and the variables are grouped correctly. It will also checks whether the values for each of those statistics are correct, with tolerance for numbers that are not exactly the same to be considered equal due to decimals.
 
+Reference: [expect_is, expect_equal, expect_error](https://cran.r-project.org/web/packages/tinytest/vignettes/tinytest_examples.pdf)
+
 ```{r, E4- test for non NAs}
 
 # create test using a dataframe that has no NA's
